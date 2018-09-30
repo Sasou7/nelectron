@@ -5,15 +5,58 @@
     <title>Hello World!</title>
   </head>
   <body>
-    <h1>Hello World!</h1>
+    <h1>Bonjour</h1>
     <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+    
+    <p><var id="result">result</var></p>
 
     <script>
       // You can also require other files to run in this process
-      require('./renderer.js')
+      require('./renderer.js');
+
+      
+
+      var Datastore = require('nedb');  
+      var users = new Datastore();
+
+      var scott = {  
+          name: 'Scott',
+          twitter: '@ScottWRobinson'
+          
+      };
+     var scott1 = {  
+          name: 'Scott8',
+          twitter: '@ScottWRobinson'
+          
+      };
+
+     var scott2 = {  
+          name: 'Scott',
+          twitter: '@ScottWRobinson'
+          
+      };
+
+     var scott3 = {  
+          name: 'Scott8',
+          twitter: '@ScottWRobinson1'
+          
+      };
+
+      users.insert(scott, function(err, doc) { });
+
+      users.insert(scott1, function(err, doc) { });
+
+      users.insert(scott2, function(err, doc) { });
+
+      users.insert(scott3, function(err, doc) { });
+
+      users.findOne({ name: 'Scott8' }, function (err, docs) {
+          var result = docs;
+          console.log(JSON.stringify(result));
+          document.getElementById('result').innerHTML = JSON.stringify(result);
+
+      });
+
     </script>
   </body>
 </html>
