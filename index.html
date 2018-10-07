@@ -15,10 +15,13 @@
   Année: <input type="text" id="year" value="2003"><br>
 </form> 
 <button type="button" value="Submit" onclick="addVoiture()">add voiture</button>
-<button onclick="myFunction()">Try it</button>
+<button type="button" value="Submit" onclick="myFunction()">Show car on input</button>
+<button type="button" value="Submit" onclick="showDatafile()">Show car in datafile</button>
 
    <p id="demo"></p> <br>
    <p id="ttevoiture"></p>
+   <p id="showCars"></p>
+
 
     <script>
       // You can also require other files to run in this process
@@ -82,7 +85,8 @@ function myFunction() {
 
 
       //on crée la bdd
-      var voiture = new Datastore();
+      var voiture = new Datastore({ filename: 'path/to/datafile', autoload: true});      
+      
       
       
   //on enrigstre les données du formulaire dans des variables
@@ -97,7 +101,7 @@ function myFunction() {
     console.log(modèle1);
 
     voiture.insert(modèle1, function(err,car) { 
-
+ //on recherche toutes les voitures de modèle BMW enregistrées dans la bdd
         voiture.find({ modèle: 'BMW M3' }, function (err, cars) {
               var ttevoiture = cars;
                console.log(JSON.stringify(ttevoiture));
@@ -105,10 +109,22 @@ function myFunction() {
 
           });
     });
-
-    //on recherche toutes les voitures de modèle BMW enregistrées dans la bdd
-        
     }
+
+
+    function showDatafile(){
+
+      voiture.find({ modèle: 'BMW M3' }, function (err, cars) {
+              var showCars = cars;
+               console.log(JSON.stringify(showCars));
+              document.getElementById('showCars').innerHTML = JSON.stringify(showCars);
+
+          });
+
+    }
+
+
+
     </script>
   </body>
 </html>
