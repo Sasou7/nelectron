@@ -8,7 +8,17 @@
     <h1>Bonjour</h1>
     <!-- All of the Node.js APIs are available in this renderer process. -->
     
-    <p><var id="result">result</var></p>
+    <p><var id="result"></var></p>
+
+    <form id="myForm">
+  Modèle : <input type="text" id="model" value="BMW M3"><br>
+  Année: <input type="text" id="year" value="2003"><br>
+</form> 
+<button type="button" value="Submit" onclick="addVoiture()">add voiture</button>
+<button onclick="myFunction()">Try it</button>
+
+   <p id="demo"></p> <br>
+   <p id="ttevoiture"></p>
 
     <script>
       // You can also require other files to run in this process
@@ -57,6 +67,48 @@
 
       });
 
+
+function myFunction() {
+    var elements = document.getElementById("myForm").elements;
+    var obj ={};
+    for(var i = 0 ; i < elements.length ; i++){
+        var item = elements.item(i);
+        obj[item.name] = item.value;
+    }
+
+    document.getElementById("demo").innerHTML = JSON.stringify(obj);
+}
+
+
+
+      //on crée la bdd
+      var voiture = new Datastore();
+      
+      
+  //on enrigstre les données du formulaire dans des variables
+  function addVoiture(){
+    var mod = document.getElementById("model").value;
+    var year = document.getElementById("year").value;
+//on crée une table pour le premier modèle de véhicule
+    var modèle1 = {
+          modèle: mod,
+          année: year
+      };
+    console.log(modèle1);
+
+    voiture.insert(modèle1, function(err,car) { 
+
+        voiture.find({ modèle: 'BMW M3' }, function (err, cars) {
+              var ttevoiture = cars;
+               console.log(JSON.stringify(ttevoiture));
+              document.getElementById('ttevoiture').innerHTML = JSON.stringify(ttevoiture);
+
+          });
+    });
+
+    //on recherche toutes les voitures de modèle BMW enregistrées dans la bdd
+        
+    }
     </script>
   </body>
 </html>
