@@ -17,10 +17,14 @@
 <button type="button" value="Submit" onclick="addVoiture()">add voiture</button>
 <button type="button" value="Submit" onclick="myFunction()">Show car on input</button>
 <button type="button" value="Submit" onclick="showDatafile()">Show car in datafile</button>
+<button type="button" value="Submit" onclick="showAllDatafile()">Show all cars in datafile</button>
+<button type="button" value="Submit" onclick="searchDatafile()">Search car in datafile</button>
 
    <p id="demo"></p> <br>
    <p id="ttevoiture"></p>
    <p id="showCars"></p>
+   <p id="showAllCars"></p>
+   <p id="searchCars"></p>
 
 
     <script>
@@ -84,15 +88,17 @@ function myFunction() {
 
 
 
-      //on crée la bdd
+      //on crée la bdd qui est sauvegardée sur un fichier
       var voiture = new Datastore({ filename: 'path/to/datafile', autoload: true});      
       
       
       
   //on enrigstre les données du formulaire dans des variables
   function addVoiture(){
-    var mod = document.getElementById("model").value;
+    var mod = document.getElementById("model").value.toUpperCase();
     var year = document.getElementById("year").value;
+
+
 //on crée une table pour le premier modèle de véhicule
     var modèle1 = {
           modèle: mod,
@@ -113,11 +119,44 @@ function myFunction() {
 
 
     function showDatafile(){
-
-      voiture.find({ modèle: 'BMW M3' }, function (err, cars) {
+      var mod = document.getElementById("model").value.toUpperCase();
+      //on recherche un véhicule avec intitulé exact entré dans le champ modele
+      voiture.find({ modèle: mod}, function (err, cars) {
               var showCars = cars;
                console.log(JSON.stringify(showCars));
               document.getElementById('showCars').innerHTML = JSON.stringify(showCars);
+
+          });
+
+    }
+
+    function showAllDatafile(){
+      var mod = document.getElementById("model").value.toUpperCase();
+      //on recherche tous ce qu'il y a dans le datastore
+      voiture.find({}, function (err, cars) {
+              var showAllCars = cars;
+               console.log(JSON.stringify(showAllCars));
+              document.getElementById('showAllCars').innerHTML = JSON.stringify(showAllCars);
+
+          });
+
+    }
+
+
+    function searchDatafile(){
+          var mod = document.getElementById("model").value.toUpperCase();
+          var year = document.getElementById("year").value;
+     
+
+          //On crée un objet RegExp qui va rechercher toutes similitudes avec la recherche
+
+          var modd = new RegExp(mod, 'g');
+          
+      //ici, l'opération {$or (ou $and): [{query1} , {query2}] } permet de faire la recherche sur tous les champs. On peut ajouter autant de query qu'il n'y a de condition ou de champs à ajouter.
+      voiture.find( {$or: [{modèle: modd}, {année: modd}] }, function (err, cars) {
+              var searchCars = cars;
+               console.log(JSON.stringify(searchCars));
+              document.getElementById('searchCars').innerHTML = JSON.stringify(searchCars);
 
           });
 
